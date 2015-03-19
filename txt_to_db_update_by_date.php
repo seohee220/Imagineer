@@ -1,6 +1,13 @@
+<meta http-equiv="content-Type" content="Text/html" charset="euc-kr">
+<?php
+	if(isset($_GET['file_kakao'])){
+		$file_kakao = $_GET['file_kakao'];
+		echo '---------------------------'.$file_kakao;
+	}
+?>
 <html>
 <head>
-<meta http-equiv="content-Type" content="Text/html" charset="utf-8">
+<meta http-equiv="content-Type" content="Text/html" charset="euc-kr">
 </head>
 <body>
 <?php
@@ -76,13 +83,18 @@ include "./db_connection.inc";
 mysqli_query ( $dbc, "SET NAMES 'utf8'" );
 
 // file name
-$filename_a = 'KakaoTalk_20150102_1003_23_564_신땡땡.txt';
-$filename = iconv ( "UTF-8", "EUC-KR", $filename_a );
-$arr_filename = explode ( '_', $filename_a );
+//$filename_a = 'KakaoTalk_20150102_1003_23_564_신땡땡.txt';
+$filename = $file_kakao;
+//$filename = iconv ( "UTF-8", "EUC-KR", $filename_a );
+echo '22==='.$filename."<br>";
+$arr_filename = explode ( '_', $filename );
 $arr_filename2 = explode ( '.', $arr_filename [5] );
   //user(고객) 이름
 $user = $arr_filename2 [0];
-$temp = @file ( $filename ); // 파일을 받아서
+echo "33==".$user;
+//$temp = file ( './files/'.$filename ) ; // 파일을 받아서
+	$destination = './files/'.$filename;
+	$temp = file ( $destination ) ;
 $cnt = count ( $temp ); // 몇줄이냐
 //quarter 처음 무조건 1
 $quarter=1;
@@ -112,7 +124,10 @@ echo $last_date/*.' '.$last_time*/;
 for($i = 0; $i < $cnt; $i ++) {
 	//$first=지금 대화하는 사람 이름
 	$tmp = explode ( "] [", $temp[$i] );
+	//echo "==>".var_dump(iconv_get_encoding('all'))."<br>"; */
 	$first = ltrim ( $tmp [0], "[" ); // '['문자 제거!
+	//$first = iconv ( "utf-8", "euc-kr", $first ); //utf-8 -> euc-kr
+	//echo $first."<br>";
 	///////////////////////////////////
 	
 	
@@ -128,6 +143,7 @@ for($i = 0; $i < $cnt; $i ++) {
 			
 			//date
 			$date=date("Y-m-d", mktime(null,null,null,$month,$day,$year));
+			echo 'dddd'.$date;
 		}
 		
 	} 
@@ -139,10 +155,10 @@ for($i = 0; $i < $cnt; $i ++) {
 		//date
 		$date = $exp1[0];
 	}
-	
+
 	//날짜 부분 아니면!!!!!! (=) 일반 대화부분
 	else{
-
+		$first = iconv ( "utf-8", "euc-kr", $first );
 		if (strcmp ( $first, $user ) != 0) { //	 $first != $user
 			if ($tutor == null) {
 				$tutor = $first;
@@ -231,10 +247,11 @@ for($i = 0; $i < $cnt; $i ++) {
 			else{
 				$quarter=4;
 			}
-
+			//user 인코딩
+			$user_iconv = iconv("euc-kr", "utf-8", $user);
 			//SAVE DIALOGUE //대화 내용 저장 (일반)
 			$query = "INSERT INTO TEXT " .
-					 "SET $text_user='$user'".
+					 "SET $text_user='$user_iconv'".
 					 ",$text_tutor='$tutor'".
 					 ",$text_date='$date'".
 					 ",$text_time='$time'".
