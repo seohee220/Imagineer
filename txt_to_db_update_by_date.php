@@ -334,7 +334,32 @@ while($row=mysqli_fetch_array($result)){
 }
 //echo $min_size.'/'.$max_size.'/'.$avg_size;
 
+//INDICATOR DB에 저장
+$query = "INSERT INTO INDICATOR ".
+		 "SET ".
+		 "IND_DATE='$date'".
+		 ",IND_TUTOR_MAX=$max_t".
+		 ",IND_TUTOR_MIN=$min_t".
+		 ",IND_TUTOR_AVG=$avg_t".
+		 ",IND_MEMBER_MAX=$max_u".
+		 ",IND_MEMBER_MIN=$min_u".
+		 ",IND_MEMBER_AVG=$avg_u".
+		 ",IND_TUTOR_15MIN_1=$qut_t[0]".
+		 ",IND_TUTOR_15MIN_2=$qut_t[1]".
+		 ",IND_TUTOR_15MIN_3=$qut_t[2]".
+		 ",IND_TUTOR_15MIN_4=$qut_t[3]".
+		 ",IND_MEMBER_15MIN_1=$qut_u[0]".
+		 ",IND_MEMBER_15MIN_2=$qut_u[1]".
+		 ",IND_MEMBER_15MIN_3=$qut_u[2]".
+		 ",IND_MEMBER_15MIN_4=$qut_u[3]".
+		 ",IND_LETTER_MAX=$max_size".
+		 ",IND_LETTER_MIN=$min_size".
+		 ",IND_LETTER_AVG=$avg_size"
+		 ;
+mysqli_query($dbc,$query) or die("indicator error");
+
 mysqli_close ( $dbc );
+
 ?>
 
 </body>
